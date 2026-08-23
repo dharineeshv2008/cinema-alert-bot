@@ -1,0 +1,9 @@
+{
+  "name": "cinema-alert-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
