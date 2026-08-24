@@ -214,88 +214,54 @@ async function sendTelegram(msg) {
     console.log("Telegram error:", err.message);
   }
 }*/
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 const axios = require("axios");
 
-// 🔐 ENV VARIABLES
-const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
+// 🔧 CONFIG
+const URL = "https://www.karurcinemas.com/";
+const KEYWORDS = ["toxic", "irumudi"]; // ✅ multiple keywords
+
+const BOT_TOKEN = "Y8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
 const CHAT_ID = "6868121119";
 
-const URL = "https://karurcinemas.com";
-
-// 🎯 Keywords
-const KEYWORDS = [
-  "toxic",
-  "irumudi",
-  "leo"
-];
-
-// ⏱️ 1 minute interval
-const INTERVAL = 60 * 1000;
-
-async function checkSite() {
+// 🚀 FUNCTION
+async function checkWebsite() {
   let browser;
 
   try {
-    console.log("🔄 Checking site...");
+    console.log("🔄 Checking karurcinemas...");
 
     browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath:
+        process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium",
+      headless: true
     });
 
     const page = await browser.newPage();
 
     await page.goto(URL, {
       waitUntil: "networkidle2",
-      timeout: 0
+      timeout: 60000
     });
 
-    const text = await page.evaluate(() =>
-      document.body.innerText.toLowerCase()
-    );
+    const content = await page.content();
+    let message = `🎬 Karur Cinemas Update:\n\n`;
 
-    console.log("📄 Page loaded");
-
-    let foundKeywords = [];
-
-    KEYWORDS.forEach(keyword => {
-      const clean = keyword.toLowerCase().trim();
-
-      if (text.includes(clean)) {
-        foundKeywords.push(clean);
+    // 🔍 Check all keywords
+    KEYWORDS.forEach((keyword) => {
+      if (content.toLowerCase().includes(keyword.toLowerCase())) {
+        message += `✅ FOUND: ${keyword}\n`;
+      } else {
+        message += `❌ NOT FOUND: ${keyword}\n`;
       }
     });
 
-    // 🎯 IF FOUND
-    if (foundKeywords.length > 0) {
-      console.log("🎬 FOUND:", foundKeywords);
+    message += `\n🌐 ${URL}`;
 
-      await sendTelegram(
-        `🔥 MOVIE FOUND 🔥\n\n🎬 ${foundKeywords.join(", ")} is available!`
-      );
+    console.log(message);
 
-    } 
-    // ❌ IF NOT FOUND
-    else {
-      console.log("❌ Not found");
-
-      await sendTelegram(
-        `⏳ Not yet released...\n\nWatching for: ${KEYWORDS.join(", ")}`
-      );
-    }
-
-  } catch (err) {
-    console.error("❌ Error:", err.message);
-
-    await sendTelegram("⚠️ Error checking website");
-  } finally {
-    if (browser) await browser.close();
-  }
-}
-
-// 📱 TELEGRAM
-async function sendTelegram(message) {
-  try {
+    // 📩 SEND TELEGRAM
     await axios.post(
       `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
       {
@@ -304,15 +270,16 @@ async function sendTelegram(message) {
       }
     );
 
-    console.log("📩 Telegram sent");
-
-  } catch (err) {
-    console.error("Telegram error:", err.message);
+    console.log("📤 Telegram message sent");
+  } catch (error) {
+    console.error("❌ Error:", error.message);
+  } finally {
+    if (browser) await browser.close();
   }
 }
 
-// ⏱️ Run every 1 minute
-setInterval(checkSite, INTERVAL);
+// ▶️ Run immediately
+checkWebsite();
 
-// 🚀 Run immediately
-checkSite();
+// 🔁 Run every 1 minute
+setInterval(checkWebsite, 60 * 1000);
