@@ -37,7 +37,7 @@ function sendTelegram(msg) {
 }
 
 setInterval(checkSite, 60000);
-checkSite();
+checkSite();/*
 const axios = require("axios");
 
 const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
@@ -75,7 +75,7 @@ function sendTelegram(msg) {
 
 setInterval(checkSite, 60000);
 checkSite();
-
+*/
 const axios = require("axios");
 
 const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
@@ -147,8 +147,8 @@ function sendTelegram(msg) {
 setInterval(checkSite, 60000);
 
 // Run immediately
-checkSite();*/
-const axios = require("axios");
+checkSite();
+/*const axios = require("axios");
 
 const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
 const CHAT_ID = "6868121119";
@@ -213,4 +213,4 @@ async function sendTelegram(msg) {
   } catch (err) {
     console.log("Telegram error:", err.message);
   }
-}
+}*/
