@@ -75,7 +75,7 @@ function sendTelegram(msg) {
 
 setInterval(checkSite, 60000);
 checkSite();
-*/
+
 const axios = require("axios");
 
 const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
@@ -147,4 +147,70 @@ function sendTelegram(msg) {
 setInterval(checkSite, 60000);
 
 // Run immediately
-checkSite();
+checkSite();*/
+const axios = require("axios");
+
+const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
+const CHAT_ID = "6868121119";
+
+const URL = "https://karurcinemas.com";
+let KEYWORDS = ["toxic", "karuppu", "kattu"];
+
+let lastFoundTime = 0;
+let sending = true;
+
+function delay(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+async function checkSite() {
+  try {
+    console.log("Checking site...");
+
+    const res = await axios.get(URL);
+    const text = res.data.toLowerCase();
+
+    let found = false;
+
+    for (let keyword of KEYWORDS) {
+      if (text.includes(keyword)) {
+        found = true;
+
+        console.log("Found:", keyword);
+
+        if (sending) {
+          await sendTelegram(`🎬 ${keyword} movie started booking! 🔥`);
+
+          // 🔥 prevent spam
+          await delay(3000);
+        }
+
+        lastFoundTime = Date.now();
+      }
+    }
+
+    // ⏱️ If NOT found for 15 mins
+    if (!found && Date.now() - lastFoundTime > 15 * 60 * 1000) {
+      await sendTelegram("❌ Not yet received booking...");
+      await delay(3000);
+      lastFoundTime = Date.now();
+    }
+
+  } catch (err) {
+    console.log("Error:", err.message);
+  }
+}
+
+async function sendTelegram(msg) {
+  try {
+    await axios.post(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        chat_id: CHAT_ID,
+        text: msg
+      }
+    );
+  } catch (err) {
+    console.log("Telegram error:", err.message);
+  }
+}
