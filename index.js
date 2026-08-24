@@ -33,7 +33,19 @@ async function checkSite() {
       const now = Date.now();
 
       if (now - lastNotFoundTime > 5 * 60 * 1000) {
-        sendTelegram("❌ Movie Not Found");
+        sendTelegram(`
+😴😴😴 NO UPDATE 😴😴😴
+
+❌ *MOVIE NOT FOUND* ❌  
+🎬 *TOXIC*  
+
+⏳ Still Not Released  
+🔄 Checking Again Soon...  
+
+📡 Stay Tuned  
+
+😴😴😴😴😴😴😴😴😴
+`);
         lastNotFoundTime = now;
         console.log("Sent NOT FOUND");
       }
@@ -55,7 +67,17 @@ function sendTelegram(msg) {
 // 🔥 Continuous sender (every 5 sec if found)
 setInterval(() => {
   if (isFound) {
-    sendTelegram("🎬 Movie Found: toxic");
+    sendTelegram(`
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+🎬 *MOVIE FOUND* 🎬  
+🚨 *TOXIC* 🚨  
+
+💥 Available Now in Karur Cinemas!  
+🍿 Check Immediately!  
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+`);
     console.log("Sending FOUND message...");
   }
 }, 5000);
