@@ -218,8 +218,8 @@ const puppeteer = require("puppeteer");
 const axios = require("axios");
 
 // 🔐 ENV VARIABLES
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const CHAT_ID = process.env.CHAT_ID;
+const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
+const CHAT_ID = "6868121119";
 
 const URL = "https://karurcinemas.com";
 
