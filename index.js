@@ -87,7 +87,7 @@ const URL = "https://karurcinemas.com";
 const KEYWORDS = [
   "toxic",
   "toxic movie",
-  "yash toxic",
+  "Irumudi",
   "kgf star toxic"
 ];
 
