@@ -76,7 +76,7 @@ function sendTelegram(msg) {
 setInterval(checkSite, 60000);
 checkSite();
 */
-const axios = require("axios");
+/*const axios = require("axios");
 
 const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
 const CHAT_ID = "6868121119";
@@ -214,3 +214,105 @@ async function sendTelegram(msg) {
     console.log("Telegram error:", err.message);
   }
 }*/
+const puppeteer = require("puppeteer");
+const axios = require("axios");
+
+// 🔐 ENV VARIABLES
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
+
+const URL = "https://karurcinemas.com";
+
+// 🎯 Keywords
+const KEYWORDS = [
+  "toxic",
+  "irumudi",
+  "leo"
+];
+
+// ⏱️ 1 minute interval
+const INTERVAL = 60 * 1000;
+
+async function checkSite() {
+  let browser;
+
+  try {
+    console.log("🔄 Checking site...");
+
+    browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    });
+
+    const page = await browser.newPage();
+
+    await page.goto(URL, {
+      waitUntil: "networkidle2",
+      timeout: 0
+    });
+
+    const text = await page.evaluate(() =>
+      document.body.innerText.toLowerCase()
+    );
+
+    console.log("📄 Page loaded");
+
+    let foundKeywords = [];
+
+    KEYWORDS.forEach(keyword => {
+      const clean = keyword.toLowerCase().trim();
+
+      if (text.includes(clean)) {
+        foundKeywords.push(clean);
+      }
+    });
+
+    // 🎯 IF FOUND
+    if (foundKeywords.length > 0) {
+      console.log("🎬 FOUND:", foundKeywords);
+
+      await sendTelegram(
+        `🔥 MOVIE FOUND 🔥\n\n🎬 ${foundKeywords.join(", ")} is available!`
+      );
+
+    } 
+    // ❌ IF NOT FOUND
+    else {
+      console.log("❌ Not found");
+
+      await sendTelegram(
+        `⏳ Not yet released...\n\nWatching for: ${KEYWORDS.join(", ")}`
+      );
+    }
+
+  } catch (err) {
+    console.error("❌ Error:", err.message);
+
+    await sendTelegram("⚠️ Error checking website");
+  } finally {
+    if (browser) await browser.close();
+  }
+}
+
+// 📱 TELEGRAM
+async function sendTelegram(message) {
+  try {
+    await axios.post(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        chat_id: CHAT_ID,
+        text: message
+      }
+    );
+
+    console.log("📩 Telegram sent");
+
+  } catch (err) {
+    console.error("Telegram error:", err.message);
+  }
+}
+
+// ⏱️ Run every 1 minute
+setInterval(checkSite, INTERVAL);
+
+// 🚀 Run immediately
+checkSite();
