@@ -4,7 +4,7 @@ const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
 const CHAT_ID = "6868121119";
 
 const URL = "https://karurcinemas.com";
-const KEYWORDS = ["toxic"];
+const KEYWORDS = ["toxic","ram"];
 
 let isFound = false;
 let lastNotFoundTime = 0;
