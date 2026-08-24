@@ -126,7 +126,7 @@ async function checkSite() {
         (!lastFoundTime || now - lastFoundTime > 15 * 60 * 1000) &&
         (now - lastNotified > 15 * 60 * 1000)
       ) {
-        sendTelegram("⏳ Not yet received");
+        sendTelegram("⏳ Akash 9");
         lastNotified = now;
       }
     }
