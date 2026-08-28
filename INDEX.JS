@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const BOT_TOKEN = "8736978159:AAHXzdOoAE4O_F6n0229xgNNmpiBJ78vRCI";
+const BOT_TOKEN = "8960512301:AAGQKknYUr7VSqfuLCEOnc4OilzfBaG0gs0";
 
 // ✅ ADD MULTIPLE USERS HERE
 const CHAT_IDS = [
